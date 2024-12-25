@@ -30,7 +30,8 @@ async function sendVerificationEmail(email,otp){
         throw error
     }
 }
-// otp verification logic here-pre-middleware logic
+
+//-------------------- otp verification logic here-pre-middleware logic--------------------------
 otpSchema.pre("save",async function(next){
     await sendVerificationEmail(this.email,this.otp);
     next();
