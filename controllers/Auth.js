@@ -219,10 +219,58 @@ exports.signIn=async(req,res)=>{
 // changePassword
 exports.changePassword=async(req,res)=>{
     try {
-        
+        // get data from req body-old password,newpassword,confirmNewPassword
+        const {oldPassword,newPassword,confirmPassword}=req.body
+
+        // koi field khali to nahi-
+        if(!oldPassword || !newPassword || !confirmPassword){
+            return res.status(403).json({
+                success:false,
+                msg:'All fields are required'
+            })
+        }
+
+        // newpassword,confirmpassword match kar raha ki nahi-
+            if(newPassword!==confirmPassword){
+                return res.status(403).json({
+                    success: false,
+                    msg: 'New password and confirm password do not match',
+                  });
+            }
+
+             // validation-password match kar raha ki nahi-
+        const isMatch = await bcrypt.compare(oldPassword, user.password);
+        if (!isMatch) {
+            return res.status(403).json({
+              success: false,
+              msg: 'Old password is incorrect',
+            });
+          }
+
+        //   hash the new password-
+        const hashedPassword=await bcrypt.compare(newPassword,10);
+        // update password in db-
+         // Get the user from the database (assumes a user is authenticated)
+         const userId = req.user.id; // Assuming you have user ID in the request (from JWT)
+         const user = await User.findById(userId);
+         user.password = hashedPassword;
+         await user.save();
+
+        // send mail of password update-
+
+        // return response-
+        return res.status(200).json({
+            success: true,
+            msg: 'Password updated successfully',
+          });
+
 
     } 
     catch (err) {
-        
+        console.log(err)
+        return res.status(500).send({
+            success:false,
+            msg:"Error in changing the password"
+        });
     }
 }
