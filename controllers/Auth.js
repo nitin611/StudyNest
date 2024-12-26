@@ -163,7 +163,7 @@ exports.signIn=async(req,res)=>{
             })
         }
         // check user exist or not-
-        const user=await user.findOne({email}).populate({"additionalDetails"})
+        const user=await user.findOne({email})
         if(!user){
             return res.status(403).send({
                 success:false,
@@ -177,7 +177,7 @@ exports.signIn=async(req,res)=>{
             const payload={
                 email:user.email,
                 id:user._id,
-                role:user.role,
+                accountType:user.accountType,
             }
             // jwt token generate-
             const token=jwt.sign(payload,process.env.JWT_SECRET,{
