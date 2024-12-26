@@ -1,5 +1,5 @@
 const mongoose=require('mongoose')
-const dotend=require('dotenv')
+const dotenv=require('dotenv')
 require("dotenv").config
 
 exports.connect=()=>{

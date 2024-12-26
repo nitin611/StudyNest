@@ -69,7 +69,7 @@ exports.sendOTP=async(req,res)=>{
     }
    
 }
-// signup
+// --------signup---------
 
 exports.signUp=async(req,res)=>{
 
@@ -93,13 +93,14 @@ exports.signUp=async(req,res)=>{
      // check user already exist -
      const existingUser=await user.findOne({email});
      if(existingUser){
+
          return res.status(403).send({
              success:false,
              msg:"user already exist , please signin"
          })
      }
         // find most recent otp for the user from the db-
-        const recentOtp=await OTP.find({email}).sort({createdAt:-1}).limit(1);
+    const recentOtp=await OTP.find({email}).sort({createdAt:-1}).limit(1);
      console.log("recent otp is: ",recentOtp)
      // validate the otp from input of user and db otp
      if(recentOtp.length==0){

@@ -54,7 +54,6 @@ exports.resetPasswordToken=async(req,res)=>{
       }
 }
 
-
 // jab user link pe click karega to ish api pe call hoga jab reset password 
 // resetPassword-
 exports.resetPassword=async(req,res)=>{
@@ -105,6 +104,10 @@ exports.resetPassword=async(req,res)=>{
         return res.status(500).send({
             success:false,
             msg:'Error in resetting the password'
+
         })
+
     }
 }
+
+

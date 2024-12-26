@@ -19,7 +19,7 @@ const otpSchema=new mongoose.Schema({
 });
 
 // DB ME ENTRY SAVE HONE SE PEHLE MAIL BHEJO user ko and verify the user then create instance in the db
-// of the user, so first verify the otp then create entry in the db .
+// of the user, so first verify the otp then create entry in the db.
 
 async function sendVerificationEmail(email,otp){
     try {

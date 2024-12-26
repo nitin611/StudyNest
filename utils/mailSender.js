@@ -1,8 +1,7 @@
 const nodemailer=require('nodemailer')
-
 // MailSending Process- 
 // 1.)Create a TransPorter
-// 2.)create info in which use sendMail transporter function .
+// 2.)create info in which use sendMail transporter function.
 
 
 const mailSender=async(email,title,body)=>{
@@ -25,7 +24,11 @@ const mailSender=async(email,title,body)=>{
        return info
     } 
     catch (error) {
-        
+        console.log(error)
+        return result.status(500).send({
+            success:false,
+            msg:"Error in sending mail"
+        })
     }
 }
 module.exports=mailSender;
