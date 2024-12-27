@@ -2,7 +2,7 @@ const user=require('../Models/user')
 const OTP=require('../Models/OTP')
 const otpGenerator=require('otp-generator')
 const jwt=require('jsonwebtoken')
-
+const Profile=require('../Models/profile')
 
 
 // otp send
@@ -129,7 +129,7 @@ exports.signUp=async(req,res)=>{
          firstName,
          lastName,
          email,
-         phn,
+         phone,
          password:hashedPassword,
          accountType,
          additionalDetails:ProfileDetails._id,

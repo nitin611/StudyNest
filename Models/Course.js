@@ -19,11 +19,12 @@ const CourseSchema=new mongoose.Schema({
             type:String,
 
         },
+        // section ki schema ka refrence->
         CourseContent:[{
             type:mongoose.Schema.Types.ObjectId,
             ref:"Section"
         }],
-        RatingAndRevies:[{
+        RatingAndReviews:[{
             type:mongoose.Schema.Types.ObjectId,
             ref:"RatingAndReview"
         }],
