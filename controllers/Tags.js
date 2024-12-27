@@ -1,10 +1,10 @@
-// admin will create the tags for the platform-
-// By that predifiend tag instructors can create courses with those tags-
+// admin will create the Categorys for the platform-
+// By that predifiend Category instructors can create courses with those Categorys-
 
-const Tag=require('../Models/tags')
+const Category=require('../Models/Category')
 
-// create tag-
-exports.createTag=async(req,res)=>{
+// create Category-
+exports.createCategory=async(req,res)=>{
     try {
         const {name,descreption}=req.body
 
@@ -16,42 +16,42 @@ exports.createTag=async(req,res)=>{
 
         }
         // create entry in db-
-        const tagDetails=await Tag.create({
+        const CategoryDetails=await Category.create({
             name,
             descreption
         })
-        console.log(tagDetails)
+        console.log(CategoryDetails)
         // return response-
         return res.status(200).send({
             success:true,
-            msg:'Tag created successfully'
+            msg:'Category created successfully'
         })
     } catch (err) {
         console.log(err)
         return res.status(500).send({
             success:false,
-            msg:"Error in tag creation"
+            msg:"Error in Category creation"
         })
         
     }
 }
 
-// get all tags-
-exports.getAllTags=async(req,res)=>{
+// get all Categorys-
+exports.getAllCategorys=async(req,res)=>{
     try {
-        // har tag ke entry me name hona chaiye and description bhi present hona chaiye-
+        // har Category ke entry me name hona chaiye and description bhi present hona chaiye-
 
-        const allTags=await Tag.find({},{name:true,descreption:true});
+        const allCategorys=await Category.find({},{name:true,descreption:true});
         return res.status(200).send({
             success:true,
-            msg:"All tags fetched successfully"
+            msg:"All Categorys fetched successfully"
         })
     } 
     catch (err) {
         console.log(err)
         return res.status(500).send({
             success:false,
-            msg:"Error in getting all tags"
+            msg:"Error in getting all Categorys"
         })
         
     }

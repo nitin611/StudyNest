@@ -1,22 +1,20 @@
 const Course=require('../Models/Course')
-const Tag=require('../Models/tags')
+const Category=require('../Models/Category')
 const user = require('../Models/user')
 const User=require('../Models/user')
 const uploadImageToCloudinary=require('../utils/imageUploader')
 
-
-
-// create course handler-
+// ---------------------------create course handler------------------------------------
 
 exports.createCourse=async(req,res)=>{
     
     try {
         // data fetch karo-
-        const {courseName,courseDescription,whatYouWillLearn,price,tag}=req.body
+        const {courseName,courseDescription,whatYouWillLearn,price,Category}=req.body
         // file fetch karo-
         const thumbnail=req.files.thumbnailImage;
         // validation karo fetched data ko-
-        if(!courseName || !courseDescription ||!whatYouWillLearn || !price || !tag || !thumbnail){
+        if(!courseName || !courseDescription ||!whatYouWillLearn || !price || !Category || !thumbnail){
             return res.status(403).json({
                 success:false,
                 msg:"All fields are required"
@@ -38,12 +36,12 @@ exports.createCourse=async(req,res)=>{
             })  
         }
 
-        // tag ka validation karo- tag jo body me mil raha wo ek id hai kyuki course ke model me chekc karo -
-        const tagDetails=await Tag.findById(tag)
-        if(!tagDetails){
+        // Category ka validation karo- Category jo body me mil raha wo ek id hai kyuki course ke model me chekc karo -
+        const CategoryDetails=await Category.findById(Category)
+        if(!CategoryDetails){
             return res.status(403).json({
                 success:false,
-                msg:'No tag found'
+                msg:'No Category found'
             })
         }
 
@@ -57,7 +55,7 @@ exports.createCourse=async(req,res)=>{
             instructor:instructorDetails._id,
             whatYouWillLearn,
             price,
-            tag:tagDetails._id,
+            Category:CategoryDetails._id,
             thumbnail:thumbnailImage.secure_url,
         })
 
@@ -71,9 +69,9 @@ exports.createCourse=async(req,res)=>{
                 }
             },{new:true})
 
-        // tag Schema jo bana hai uske andar bhi ye course add kardo-
-            await Tag.findByIdAndUpdate(
-                {_id:tagDetails._id},
+        // Category Schema jo bana hai uske andar bhi ye course add kardo-
+            await Category.findByIdAndUpdate(
+                {_id:CategoryDetails._id},
                 {
                     $push:{
                         course:newCourse._id
@@ -99,7 +97,7 @@ exports.createCourse=async(req,res)=>{
     }
 }
 
-// -----------------------------------get allcourses --------------------
+// -----------------------------------get allcourses ----------------------------------
 exports.getAllCourse=async(req,res)=>{
 
     try {
