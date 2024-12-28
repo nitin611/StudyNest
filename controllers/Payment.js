@@ -113,8 +113,65 @@ exports.verifySignature=async(req,res)=>{
     // NOW MATCH THIS DIGEST AND signature to aage badho if match it means payment is AUTHORIZED-
     if(signature===digest){
         console.log('Payment is Authorized')
+        // notes me courseId and userId update kiye the wahi se fetch kiye hai taki course ko student ke
+        // andar dikha sake after successful purchase-
+        const {courseId,userId}=req.body.payload.payment.entity.notes;
+        // logic for 
+        try {
+            // fulfill the action-student ko enroll karo
+            // find the course and enroll the student in the course after successful transaction-
+            const enrolledCourse=await Course.findOneAndUpdate({_id:courseId},
+                                                        {$push:{studentsEnrolled:userId}},
+                                                    {new:true});
+                if(!enrolledCourse){
+                    return res.status(500).send({
+                        success:false,
+                        msg:'Course not found'
+                    })
+                }
+                console.log(enrolledCourse)
+
+                // find the student  and add the course in the list of enrolled courses-
+                const enrolledStudent=await user.findOneAndUpdate(
+                                                    {_id:userId},
+                                                    {$push:{
+                                                        courses:courseId}},
+                                                        {new:true}
+                );
+                console.log(enrolledStudent)
+
+                // send mail to the student about confirmation mail-
+                const emailResponse=await mailSender(
+                                        enrolledStudent.email,
+                                        "Congratulations",
+                                        " You are Enrolled in the StudyNest Course",
+                                        
+                );
+                // return response-
+                console.log(emailResponse)
+                return res.status(200).send({
+                    success:true,
+                    msg:'Signature verified and course added in student dashboard'
+
+                })
+
+        } catch (error) {
+            console.log(error)
+            return res.status(500).send({
+                success:false,
+                msg:error.message
+            })
+        }
+
     }
-    
+    else{
+        // signature match nahi hua to-
+        return res.status(500).send({
+            success:false,
+            msg:'Invalid signature does not match with digest'
+        })
+    }
+
 
 
     
