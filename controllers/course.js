@@ -128,3 +128,62 @@ exports.getAllCourse=async(req,res)=>{
         })
     }
 }
+
+// get courseDetails-
+exports.getCourseDetails=async(req,res)=>{
+
+    try {
+     // data courseId karo-
+        const {courseId}=req.body
+    // validation karo-
+    if(!courseId){
+        return res.json({
+            success:false,
+            msg:'Give course id'
+        })
+    }
+
+    // get details call karo with populate to fetch all details-
+    const courseDetails=await Course.findById(
+                                        {_id:courseId})
+                                        .populate(
+                                            {
+                                                path:'instructor',
+                                                populate:{
+                                                    path:"additionalDetails"
+                                                }
+                                            }
+                                        )
+                                        .populate("RatingAndReviews")
+                                        .populate("Category")
+                                        .populate({
+                                            path:"CourseContent",
+                                            populate:{
+                                                path:"SubSection"
+                                            }
+                                        }).exec()
+    if(!courseDetails){
+        res.status(401).send({
+            success:false,
+            msg:`Could not find the course with courseID: ${courseId}`
+        });
+    }
+    // result send kardo->
+    return res.status(200).send({
+        success:true,
+        msg:'Course details fetched successfully',
+        data:courseDetails
+    })
+    } 
+    catch (error) {
+        console.log(error)
+        return res.status(500).send({
+            success:false,
+            msg:'Error in fetching courseDetails'
+        })
+    }
+
+
+   
+
+}

@@ -24,7 +24,7 @@ exports.capturePayment=async(req,res)=>{
         try {
             course=await Course.findById(courseId)
             if(!course){
-                return json({
+                return res.json({
                     success:false,
                     msg:'Could not found the course'
                 })
@@ -57,7 +57,7 @@ exports.capturePayment=async(req,res)=>{
         const options={
             amount:amount*100,
             currency,
-            receipt:Math.random(Date.now()).toString(),
+            receipt: `${Date.now()}-${Math.floor(Math.random() * 1000)}`,
             notes:{
                 courseId:courseId,
                 userId
@@ -76,7 +76,7 @@ exports.capturePayment=async(req,res)=>{
                 orderId:paymentResponse.id,
                 currency:paymentResponse.currency,
                 amount:paymentResponse.amount,
-                msg:'Payment Successful'
+                msg:'Payment Initiated  Successfully'
             })
 
         } catch (error) {
@@ -132,7 +132,7 @@ exports.verifySignature=async(req,res)=>{
                 console.log(enrolledCourse)
 
                 // find the student  and add the course in the list of enrolled courses-
-                const enrolledStudent=await user.findOneAndUpdate(
+                const enrolledStudent=await User.findOneAndUpdate(
                                                     {_id:userId},
                                                     {$push:{
                                                         courses:courseId}},
@@ -144,7 +144,7 @@ exports.verifySignature=async(req,res)=>{
                 const emailResponse=await mailSender(
                                         enrolledStudent.email,
                                         "Congratulations",
-                                        " You are Enrolled in the StudyNest Course",
+                                        "You are successfully enrolled in the StudyNest course.",
                                         
                 );
                 // return response-
@@ -170,11 +170,7 @@ exports.verifySignature=async(req,res)=>{
             success:false,
             msg:'Invalid signature does not match with digest'
         })
-    }
-
-
-
-    
+    } 
 }
 
 

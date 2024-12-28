@@ -4,7 +4,6 @@ const CourseSchema=new mongoose.Schema({
         courseName:{
             type:String,
             trim:true,
-
         },
         courseDescription:{
             type:String,
@@ -34,6 +33,10 @@ const CourseSchema=new mongoose.Schema({
         thumbnail:{
             type:String,
         },
+        tag:{
+            type:[String],
+            required:true
+        },
         Category:{
             type:mongoose.Schema.Types.ObjectId,
             ref:"Category",
@@ -42,7 +45,11 @@ const CourseSchema=new mongoose.Schema({
             type:mongoose.Schema.Types.ObjectId,
             ref:"User",
             required:true,
-        }]
+        }],
+        status:{
+            type:String,
+            enum:["Draft","Published"],
+        }
 })
 
 module.exports=mongoose.model("Course",CourseSchema)
