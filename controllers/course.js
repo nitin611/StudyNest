@@ -182,8 +182,4 @@ exports.getCourseDetails=async(req,res)=>{
             msg:'Error in fetching courseDetails'
         })
     }
-
-
-   
-
 }
