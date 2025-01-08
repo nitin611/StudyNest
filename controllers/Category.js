@@ -40,7 +40,7 @@ exports.createCategory=async(req,res)=>{
 exports.getAllCategorys=async(req,res)=>{
     try {
         // har Category ke entry me name hona chaiye and description bhi present hona chaiye-
-
+        
         const allCategorys=await Category.find({},{name:true,descreption:true});
         return res.status(200).send({
             success:true,
@@ -53,8 +53,5 @@ exports.getAllCategorys=async(req,res)=>{
             success:false,
             msg:"Error in getting all Categorys"
         })
-        
     }
 }
-
-// 
