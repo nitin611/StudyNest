@@ -18,7 +18,7 @@ exports.createRating=async(req,res)=>{
         if(!courseDetails){
             return res.status(403).send({
                 success:false,
-                msg:'Student is not enrolled in the course';
+                msg:'Student is not enrolled in the course'
             });
         }
         // check if the student have already reviewed or not-
@@ -67,22 +67,44 @@ exports.createRating=async(req,res)=>{
         
     }
 }
-    // fetch details-
+   
 
-    // 
 // getAverageRating-
     exports.getAvgRating=async(req,res)=>{
         try {
             // fetch courseId-
             const courseId=req.body.courseid;
             // calculating avg rating-
-            
+            const result=await RatingAndRevie.aggregate([
+                {
+                    $match:{
+                        course:new mongoose.Types.objectId(courseId),
+                    },
+
+                },
+                {
+                    $group:{
+                        _id:null,
+                        averageRating:{$avg:"rating"}
+                    }
+                }
+            ])
 
 
-            // return response-
+            // return response response ek array hai isliye length check karlo-
+            if(result.length>0){
+                return res.status(200).send({
+                    success:true,
+                    avgRating:result[0].averageRating,
+                })
+            }
+            // if no review or rating exist then-
             return res.status(200).send({
-
-            })
+                success:true,
+                msg:"Avg rating 0 no rating given",
+                avgRating:0
+            });
+            
         } catch (err) {
             console.log(err)
             return res.status(500).send({
@@ -93,5 +115,33 @@ exports.createRating=async(req,res)=>{
     }
 
     // 
-// getAllrating-
+// getAllrating- User jo rating and review dete hai wo display karwane ke liye hai-
+exports.getAllRating=async(req,res)=>{
+    try {
+        // fetch input from req-
+        const allReviews=RatingAndRevie.find({}).sort({rating:"desc"}).populate({
+                                                                        path:"user",
+                                                                        select:"firstName lastName email image"
+        }).populate({
+            path:"course",
+            select:"courseName"
+        }).exec();
+        // yahan pe hamne bataya hai user ke andar kis kis chiz ko populate karwana hai wo sab hai 
+        // select ke andar-
+
+        return res.status(200).send({
+            success:true,
+            msg:'All review fetched successfully',
+            data:allReviews
+        })
+
+    } catch (err) {
+        console.log(err)
+        return res.status(500).send({
+            success:false,
+            msg:"Error in getting all rating"
+        })
+        
+    }
+}
 
