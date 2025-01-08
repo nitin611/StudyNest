@@ -76,12 +76,22 @@ exports.CategoryPageDetails=async(req,res)=>{
         // get courses for different categories-
         // aise category ka data lake do jiska id different ho
         const differentCategories=await Category.find({_id:{$ne:categoryId},
-                                                    });
+                                                    }).populate("courses").exec();
         // get topSelling courses-
+        const topSellingCourses = await Course.find()
+        .sort({ studentsEnrolled: -1 })
+        .limit(5); // Adjust the limit as per your requirement
             
 
         // return all the 3 types of result-
-
+            return res.status(200).send({
+                success:true,
+                data:{
+                    selectedCategory,
+                    differentCategories,
+                },
+                msg:"All categories data fetched successfully"
+            })
 
     } catch (err) {
         console.log(err)
