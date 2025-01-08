@@ -40,12 +40,11 @@ exports.createCategory=async(req,res)=>{
 exports.getAllCategorys=async(req,res)=>{
     try {
         // har Category ke entry me name hona chaiye and description bhi present hona chaiye-
-        
         const allCategorys=await Category.find({},{name:true,descreption:true});
         return res.status(200).send({
             success:true,
             msg:"All Categorys fetched successfully"
-        })
+        });
     } 
     catch (err) {
         console.log(err)
@@ -53,5 +52,43 @@ exports.getAllCategorys=async(req,res)=>{
             success:false,
             msg:"Error in getting all Categorys"
         })
+    }
+}
+// categoryPageDetails-Most Popular course,top course, frequiantly buy course-
+// different type of course show karna -
+
+exports.CategoryPageDetails=async(req,res)=>{
+    try {
+        // get categoryId-
+        const {categoryId}=req.body;
+        // ush category ke corresponding jitne bhi courses hai unko fetch karlo-
+        const selectedCategory=await Category.findById(categoryId)
+                                                    .populate("course").exec();
+        // validation karlo-
+        if(!selectedCategory){
+            return res.status(403).send({
+                success:false,
+                msg:"Cannot find the selected Category course"
+            });
+
+        }
+
+        // get courses for different categories-
+        // aise category ka data lake do jiska id different ho
+        const differentCategories=await Category.find({_id:{$ne:categoryId},
+                                                    });
+        // get topSelling courses-
+            
+
+        // return all the 3 types of result-
+
+
+    } catch (err) {
+        console.log(err)
+        return res.status(500).send({
+            success:false,
+            msg:"Error in getting categorypage details"
+        })
+        
     }
 }
