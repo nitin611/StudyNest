@@ -12,7 +12,7 @@ exports.createCategory=async(req,res)=>{
             return res.status(400).send({
                 success:false,
                 msg:'All fields are required'
-            })
+            });
 
         }
         // create entry in db-
