@@ -2,7 +2,6 @@
 // By that predifiend Category instructors can create courses with those Categorys-
 
 const Category=require('../Models/Category')
-
 // create Category-
 exports.createCategory=async(req,res)=>{
     try {

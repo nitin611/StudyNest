@@ -67,8 +67,6 @@ exports.createRating=async(req,res)=>{
         
     }
 }
-   
-
 // getAverageRating-
     exports.getAvgRating=async(req,res)=>{
         try {
@@ -112,9 +110,7 @@ exports.createRating=async(req,res)=>{
                 msg:"Error in getting avg ratting"
             })
         }
-    }
-
-    // 
+    }  
 // getAllrating- User jo rating and review dete hai wo display karwane ke liye hai-
 exports.getAllRating=async(req,res)=>{
     try {
