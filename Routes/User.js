@@ -11,3 +11,4 @@ Router.post("/login",signIn)
 Router.post("/signUp",signUp)
 Router.post("/changePassowrd",changePassword)
 Router.post("/sendOtp",sendOTP)
+
