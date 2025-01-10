@@ -1,5 +1,5 @@
 const user=require('../Models/user')
-const {instance}=require('../config/razorpay')
+const instance=require('../config/razorpay')
 const Course=require('../Models/Course')
 const mailSender=require('../utils/mailSender')
 const { default: mongoose } = require('mongoose')

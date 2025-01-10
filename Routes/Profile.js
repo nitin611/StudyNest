@@ -1,4 +1,5 @@
-const {Router}=require("express")
+const express = require("express");
+const Router = express.Router();
 const {updateProfile,deleteAccount,getAllUserDetails}=require("../controllers/profile")
 
 
@@ -7,3 +8,4 @@ const {updateProfile,deleteAccount,getAllUserDetails}=require("../controllers/pr
 Router.post("/updateProfile",updateProfile)
 Router.post("/deleteAccount",deleteAccount);
 Router.post("/getUserDetails",getAllUserDetails);
+module.exports=Router

@@ -5,6 +5,7 @@ const jwt=require('jsonwebtoken')
 const Profile=require('../Models/profile')
 
 
+
 // otp send
 // flow of otp -
 // 1.)req.body me se email lo check if user already exist ->yes then return user to login page.
