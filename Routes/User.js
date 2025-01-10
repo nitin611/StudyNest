@@ -9,6 +9,6 @@ const {auth}=require("../middleware/auth")
 // Route for login-
 Router.post("/login",signIn)
 Router.post("/signUp",signUp)
-Router.post("/changePassowrd",changePassword)
+Router.post("/changePassword",changePassword)
 Router.post("/sendOtp",sendOTP)
 module.exports=Router

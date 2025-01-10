@@ -43,6 +43,7 @@ exports.auth=async(req,res,next)=>{
 exports.isAdmin=async(req,res,next)=>{
     try {
         //1st tarika- payload ke samay role daale the to yaha pe uska use kar sakte hai pehle bhi kiye hai
+        
             if(req.user.accountType!=='Admin'){
                 return res.status(401).send({
                     success:false,

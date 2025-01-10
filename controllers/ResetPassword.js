@@ -1,6 +1,7 @@
 const User=require('../Models/user')
 const mailSender=require('../utils/mailSender')
 const bcrypt=require('bcrypt')
+const crypto=require("crypto")
 
 
 // resetPasswordToekn-
@@ -8,11 +9,12 @@ exports.resetPasswordToken=async(req,res)=>{
 
       try {
           // get email from req.body-
-          const email=req.body
+          const {email}=req.body
 
           // check if email validation and user exist with this email-
-              const user=await User.findOne({email})
-              if(!user){
+          console.log(User);
+          const userCheck = await User.findOne({ email });
+              if(!userCheck){
                   return res.status(401).send({
                       success:false,
                       msg:"Your email is not registered with us"

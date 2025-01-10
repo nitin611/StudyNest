@@ -5,14 +5,14 @@ const {createCategory,getAllCategorys,CategoryPageDetails}=require("../controlle
 const {createRating,getAvgRating,getAllRating}=require("../controllers/RatingAndReview")
 const {createSection,updateSection,deleteSection}=require("../controllers/Section")
 const {createSubSection,updatedSubSection,deleteSubSection}=require("../controllers/subSection")
-
+const {auth,isAdmin}=require("../middleware/auth")
 // Routes for course-
 Router.post("/createCourse",createCourse)
 Router.post("/getAllCourse",getAllCourse)
 Router.post("/getCourseDetails",getCourseDetails)
 
 // Routes for category-
-Router.post("/createCategory",createCategory)
+Router.post("/createCategory",auth,isAdmin,createCategory)
 Router.get("/getAllCategory",getAllCategorys)
 Router.post("/categoryDetails",CategoryPageDetails)
 

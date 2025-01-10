@@ -42,7 +42,8 @@ exports.getAllCategorys=async(req,res)=>{
         const allCategorys=await Category.find({},{name:true,descreption:true});
         return res.status(200).send({
             success:true,
-            msg:"All Categorys fetched successfully"
+            msg:"All Category fetched successfully",
+            data:allCategorys
         });
     } 
     catch (err) {
