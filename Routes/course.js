@@ -5,10 +5,10 @@ const {createCategory,getAllCategorys,CategoryPageDetails}=require("../controlle
 const {createRating,getAvgRating,getAllRating}=require("../controllers/RatingAndReview")
 const {createSection,updateSection,deleteSection}=require("../controllers/Section")
 const {createSubSection,updatedSubSection,deleteSubSection}=require("../controllers/subSection")
-const {auth,isAdmin}=require("../middleware/auth")
+const {auth,isAdmin,isInstructor}=require("../middleware/auth")
 // Routes for course-
-Router.post("/createCourse",createCourse)
-Router.post("/getAllCourse",getAllCourse)
+Router.post("/createCourse",auth,isInstructor,createCourse)
+Router.get("/getAllCourse",getAllCourse)
 Router.post("/getCourseDetails",getCourseDetails)
 
 // Routes for category-
@@ -22,9 +22,9 @@ Router.get("/getRating",getAvgRating)
 Router.get("/allRating",getAllRating)
 
 // Routes for sections-
-Router.post("/createSection",createSection)
-Router.put("/updateSection",updateSection)
-Router.delete("/deleteSection/:id",deleteSection)
+Router.post("/createSection",auth,createSection)
+Router.put("/updateSection",auth,updateSection)
+Router.delete("/deleteSection/:id",auth,deleteSection)
 
 // Routes for sub-Section-
 Router.post("/createSubSection",createSubSection)

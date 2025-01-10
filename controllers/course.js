@@ -1,8 +1,7 @@
 const Course=require('../Models/Course')
 const Category=require('../Models/Category')
-const user = require('../Models/user')
 const User=require('../Models/user')
-const uploadImageToCloudinary=require('../utils/imageUploader')
+const {uploadImageToCloudinary}=require('../utils/imageUploader')
 
 // ---------------------------create course handler------------------------------------
 
@@ -10,11 +9,11 @@ exports.createCourse=async(req,res)=>{
     
     try {
         // data fetch karo-
-        const {courseName,courseDescription,whatYouWillLearn,price,Category}=req.body
+        const {courseName,courseDescription,whatYouWillLearn,price,CategoryId}=req.body
         // file fetch karo-
         const thumbnail=req.files.thumbnailImage;
         // validation karo fetched data ko-
-        if(!courseName || !courseDescription ||!whatYouWillLearn || !price || !Category || !thumbnail){
+        if(!courseName || !courseDescription ||!whatYouWillLearn || !price || !CategoryId || !thumbnail){
             return res.status(403).json({
                 success:false,
                 msg:"All fields are required"
@@ -37,7 +36,7 @@ exports.createCourse=async(req,res)=>{
         }
 
         // Category ka validation karo- Category jo body me mil raha wo ek id hai kyuki course ke model me chekc karo -
-        const CategoryDetails=await Category.findById(Category)
+        const CategoryDetails=await Category.findById(CategoryId)
         if(!CategoryDetails){
             return res.status(403).json({
                 success:false,
@@ -102,16 +101,8 @@ exports.getAllCourse=async(req,res)=>{
 
     try {
 
-        const allCourse=await Course.find({})
-            //--------------do this while testing-------------
-        //      ,{
-        //     courseName:true,
-        //     price:true,
-        //     thumbnail:true,
-        //     instructor:true,
-        //     RatingAndRevies:true,
-        //     studentsEnrolled:true
-        // }).populate('instructor').exec()
+        const allCourse=await Course.find({}).populate("CourseContent").populate("instructor")
+    
 
         return res.status(200).json({
             success:true,

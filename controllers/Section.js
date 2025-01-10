@@ -20,8 +20,12 @@ exports.createSection=async(req,res)=>{
                                                             {
                                                                 $push:{
                                                                     CourseContent:newSection._id
+
                                                                 }
-                                                            },{new:true})
+                                                            },{new:true}).populate({
+                                                                path: 'CourseContent',
+                                                                select: 'sectionName', // Populate only sectionName field if needed
+                                                            });
         // -use populate to replace sections/sub-section both in updatedCourse not just its id
         // fetch whole object of it using populate method during testing
 

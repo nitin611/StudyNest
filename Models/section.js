@@ -3,7 +3,7 @@ const SubSection = require('./SubSection')
 
 const SectionSchema=new mongoose.Schema({
 
-    name:{
+    sectionName:{
         type:String,
     },
     SubSection:[{
