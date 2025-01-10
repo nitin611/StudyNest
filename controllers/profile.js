@@ -4,7 +4,7 @@ const User=require('../Models/user')
 exports.updateProfile=async(req,res)=>{
     try {
         // fetch details-
-        const {gender,dateOfBirth="",about="",contactNumber}=req.body
+        const {gender,dateOfBirth="",about="",contactNumber=""}=req.body
         //get  user_id agar user logged in hai to user id req ke andar present hai waha se lelo-
         const id=req.user.id
         // validation of data-
@@ -96,7 +96,8 @@ exports.getAllUserDetails=async(req,res)=>{
         }
         return res.status(200).send({
             success:true,
-            msg:"UserData fetched successfully"
+            msg:"UserData fetched successfully",
+            userDetails
         })
     } catch (err) {
         console.log(err)
