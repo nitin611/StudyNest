@@ -172,7 +172,7 @@ exports.signIn=async(req,res)=>{
             })
         }
         // check user exist or not-
-        const user=await user.findOne({email})
+        const user=await User.findOne({email})
         if(!user){
             return res.status(403).send({
                 success:false,
@@ -188,6 +188,7 @@ exports.signIn=async(req,res)=>{
                 id:user._id,
                 accountType:user.accountType,
             }
+            
             // jwt token generate-
             const token=jwt.sign(payload,process.env.JWT_SECRET,{
                 expiresIn:"2h",
@@ -198,7 +199,7 @@ exports.signIn=async(req,res)=>{
             user.password=undefined
 
               // create cookie- // response send kardo-
-        const options={
+            const options={
             expires:new Date(Date.now()+3*24*60*60*1000)
         }
         res.cookie("token",token,options).status(200).send({
@@ -219,6 +220,7 @@ exports.signIn=async(req,res)=>{
 }
 
     catch (err) {
+        console.log(err)
         res.status(500).send({
             success:false,
             msg:"login failed , please try again"
