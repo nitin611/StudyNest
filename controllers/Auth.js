@@ -1,8 +1,9 @@
-const user=require('../Models/user')
+const User=require('../Models/user')
 const OTP=require('../Models/OTP')
 const otpGenerator=require('otp-generator')
 const jwt=require('jsonwebtoken')
 const Profile=require('../Models/profile')
+const bcrypt=require("bcrypt")
 
 
 
@@ -19,7 +20,7 @@ exports.sendOTP=async(req,res)=>{
     const {email}=req.body
 
     // check if user already exist-
-    const checkUserPresent=await user.findOne({email});
+    const checkUserPresent=await User.findOne({email});
     // if user already exist then return the user-
     if(checkUserPresent){
         return res.status(401).send({
@@ -52,12 +53,13 @@ exports.sendOTP=async(req,res)=>{
     const otpPayload={email,otp};
 
     // create an entry in db-
-    const otpBody=await OTP.creat(otpPayload)
+    const otpBody=await OTP.create(otpPayload)
     console.log(otpBody)
 
     res.status(200).send({
         success:true,
-        msg:"Otp sent successfully"
+        msg:"Otp sent successfully",
+        otp
     })
 
 } 
@@ -92,7 +94,7 @@ exports.signUp=async(req,res)=>{
              })
          }
      // check user already exist -
-     const existingUser=await user.findOne({email});
+     const existingUser=await User.findOne({email});
      if(existingUser){
 
          return res.status(403).send({
@@ -101,8 +103,10 @@ exports.signUp=async(req,res)=>{
          })
      }
         // find most recent otp for the user from the db-
-    const recentOtp=await OTP.find({email}).sort({createdAt:-1}).limit(1);
+    const recentOtp=await OTP.findOne({email}).sort({createdAt:-1}).limit(1);
      console.log("recent otp is: ",recentOtp)
+     console.log(otp)
+     console.log(recentOtp.otp)
      // validate the otp from input of user and db otp
      if(recentOtp.length==0){
          // otp not found-
@@ -110,8 +114,11 @@ exports.signUp=async(req,res)=>{
              success:false,
              msg:"Otp not found"
          })
+         
      }
-     else if(otp!=recentOtp){
+     
+     else if(otp!=recentOtp.otp){
+
          return res.status(400).json({
              success:false,
              msg:"Otp does not match"
@@ -130,7 +137,7 @@ exports.signUp=async(req,res)=>{
          firstName,
          lastName,
          email,
-         phone,
+         phn,
          password:hashedPassword,
          accountType,
          additionalDetails:ProfileDetails._id,
@@ -148,7 +155,7 @@ exports.signUp=async(req,res)=>{
     console.log(error)
     return res.status(500).send({
         success:false,
-        msg:"User cannot be regestered"
+        msg:"User cannot be registered"
     })
    }
 }
