@@ -102,8 +102,6 @@ exports.getAllCourse=async(req,res)=>{
     try {
 
         const allCourse=await Course.find({}).populate("CourseContent").populate("instructor")
-    
-
         return res.status(200).json({
             success:true,
             message:'data for all courses fetched successfully',
