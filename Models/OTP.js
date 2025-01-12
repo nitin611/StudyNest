@@ -21,6 +21,13 @@ const otpSchema=new mongoose.Schema({
 // DB ME ENTRY SAVE HONE SE PEHLE MAIL BHEJO user ko and verify the user then create instance in the db
 // of the user, so first verify the otp then create entry in the db.
 
+//-------------------- otp verification logic here-pre-middleware logic--------------------------
+otpSchema.pre("save",async function(next){
+    await sendVerificationEmail(this.email,this.otp);
+    next();
+})
+
+
 async function sendVerificationEmail(email,otp){
     try {
         const mailResponse=await mailSender(email,"Verification Email from StudyNest",otp);
@@ -31,11 +38,7 @@ async function sendVerificationEmail(email,otp){
     }
 }
 
-//-------------------- otp verification logic here-pre-middleware logic--------------------------
-otpSchema.pre("save",async function(next){
-    await sendVerificationEmail(this.email,this.otp);
-    next();
-})
+
 
 
 module.exports=mongoose.model("OTP",otpSchema)

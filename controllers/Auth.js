@@ -4,6 +4,7 @@ const otpGenerator=require('otp-generator')
 const jwt=require('jsonwebtoken')
 const Profile=require('../Models/profile')
 const bcrypt=require("bcrypt")
+const mailSender = require('../utils/mailSender')
 
 
 
@@ -53,8 +54,8 @@ exports.sendOTP=async(req,res)=>{
     const otpPayload={email,otp};
 
     // create an entry in db-
-    const otpBody=await OTP.create(otpPayload)
-    console.log(otpBody)
+        await OTP.create(otpPayload)
+   
 
     res.status(200).send({
         success:true,
@@ -105,7 +106,6 @@ exports.signUp=async(req,res)=>{
         // find most recent otp for the user from the db-
     const recentOtp=await OTP.findOne({email}).sort({createdAt:-1}).limit(1);
      console.log("recent otp is: ",recentOtp)
-     console.log(otp)
      console.log(recentOtp.otp)
      // validate the otp from input of user and db otp
      if(recentOtp.length==0){
@@ -228,60 +228,70 @@ exports.signIn=async(req,res)=>{
     }
 }
 // changePassword
-exports.changePassword=async(req,res)=>{
+exports.changePassword = async (req, res) => {
     try {
-        // get data from req body-old password,newpassword,confirmNewPassword
-        const {oldPassword,newPassword,confirmPassword}=req.body
+        // get data from req body - old password, new password, confirm new password
+        const { oldPassword, newPassword, confirmPassword } = req.body;
 
-        // koi field khali to nahi-
-        if(!oldPassword || !newPassword || !confirmPassword){
+        // Validate fields
+        if (!oldPassword || !newPassword || !confirmPassword) {
             return res.status(403).json({
-                success:false,
-                msg:'All fields are required'
-            })
+                success: false,
+                msg: 'All fields are required'
+            });
         }
 
-        // newpassword,confirmpassword match kar raha ki nahi-
-            if(newPassword!==confirmPassword){
-                return res.status(403).json({
-                    success: false,
-                    msg: 'New password and confirm password do not match',
-                  });
-            }
+        // Check if new password and confirm password match
+        if (newPassword !== confirmPassword) {
+            return res.status(403).json({
+                success: false,
+                msg: 'New password and confirm password do not match'
+            });
+        }
+        
+        // Validate that the old password matches the current password in the database
+        const userId = req.user.id; // Assuming you have user ID in the request (from JWT)
+        
+        const user = await User.findById(userId);
+        
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                msg: 'User not found'
+            });
+        }
 
-             // validation-password match kar raha ki nahi-
         const isMatch = await bcrypt.compare(oldPassword, user.password);
         if (!isMatch) {
             return res.status(403).json({
-              success: false,
-              msg: 'Old password is incorrect',
+                success: false,
+                msg: 'Old password is incorrect',
             });
-          }
+        }
 
-        //   hash the new password-
-        const hashedPassword=await bcrypt.compare(newPassword,10);
-        // update password in db-
-         // Get the user from the database (assumes a user is authenticated)
-         const userId = req.user.id; // Assuming you have user ID in the request (from JWT)
-         const user = await User.findById(userId);
-         user.password = hashedPassword;
-         await user.save();
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        
+        // Update the password in the database
+        user.password = hashedPassword;
+        await user.save();
 
-        // send mail of password update-
+        // Send email notification for password update
+        await mailSender(user.email, "Password Changed Successfully", "Your password has been updated successfully. If you didn't request this change, please contact support immediately.");
 
-        // return response-
+        // Return response
         return res.status(200).json({
             success: true,
             msg: 'Password updated successfully',
-          });
+        });
 
-
-    } 
-    catch (err) {
-        console.log(err)
+    } catch (err) {
+        console.log(err);
         return res.status(500).send({
-            success:false,
-            msg:"Error in changing the password"
+            success: false,
+            msg: "Error in changing the password"
         });
     }
 }
+
+
