@@ -35,7 +35,7 @@ exports.createCourse=async(req,res)=>{
             })  
         }
 
-        // Category ka validation karo- Category jo body me mil raha wo ek id hai kyuki course ke model me chekc karo -
+        // Category ka validation karo - Category jo body me mil raha wo ek id hai kyuki course ke model me chekc karo -
         const CategoryDetails=await Category.findById(CategoryId)
         if(!CategoryDetails){
             return res.status(403).json({
@@ -81,7 +81,7 @@ exports.createCourse=async(req,res)=>{
         // return response-
         return res.status(200).send({
             success:true,
-            msg:"Course created successfully",
+            msg:"Course created successfully, updated course inside category and Instructor page also",
             data:newCourse
         })
     } 
