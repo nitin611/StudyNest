@@ -27,7 +27,7 @@ Router.put("/updateSection",auth,updateSection)
 Router.delete("/deleteSection/:id",auth,deleteSection)
 
 // Routes for sub-Section-
-Router.post("/createSubSection",createSubSection)
+Router.post("/createSubSection",auth,createSubSection)
 Router.put("/updateSubSection",updatedSubSection)
 Router.delete("/deleteSubSection",deleteSubSection)
 

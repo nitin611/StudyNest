@@ -8,15 +8,16 @@ exports.createSubSection=async(req,res)=>{
     try {
         // data fetch->
         const {title,timeDuration, description,sectionId}=req.body
-        const {video}=req.files.videoFile
+        const video=req.files.videoFile
         // validation of data->
-        if(!title || !timeDuration || !description ||!sectionId || !video){
+        if(!title || !timeDuration || !description ||!sectionId){
             return res.status(403).json({
                 success:false,
                 msg:'All fields are required'
             })
         }
         // upload video on cloudinary->
+        
         const videoUploadDetails=await uploadImageToCloudinary(video,process.env.FOLDER_NAME)
         // secure url of video ko fetch karo-
         // subsection create karo->
